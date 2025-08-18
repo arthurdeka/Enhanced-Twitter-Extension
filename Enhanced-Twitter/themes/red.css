@@ -1,0 +1,143 @@
+/* ==== X (Twitter) – Purple Accent Theme ==== */
+/* Paleta base (ajuste se quiser outro tom) */
+:root {
+  --tw-accent-50:  #f5ebff;
+  --tw-accent-100: #ead8ff;
+  --tw-accent-200: #d7b7ff;
+  --tw-accent-300: #c394ff;
+  --tw-accent-400: #ae73ff;
+  --tw-accent-500: #9b59ff;
+  --tw-accent-600: #8642f7; /* principal */
+  --tw-accent-700: #6d2fe6;
+  --tw-accent-800: #5623c2;
+  --tw-accent-900: #3f1893;
+
+  --tw-accent: var(--tw-accent-600);
+  --tw-accent-contrast: #ffffff;
+
+  /* transparências úteis */
+  --tw-accent-08a: #8642f714;
+  --tw-accent-16a: #8642f729;
+  --tw-accent-24a: #8642f73d;
+  --tw-accent-32a: #8642f752;
+}
+
+/* ===== Links (menções, hashtags, etc.) ===== */
+a[role="link"],
+a[href^="/"] {
+  color: var(--tw-accent) !important;
+}
+a[role="link"]:hover,
+a[href^="/"]:hover {
+  color: var(--tw-accent-400) !important;
+  text-decoration-color: var(--tw-accent-400) !important;
+}
+
+/* ===== Botões principais (Tweet / Postar, Seguir, etc.) ===== */
+/* Seletores amplos mas seguros; evitamos “Close”/fechar */
+button:not([aria-label="Close"]),
+[role="button"]:not([aria-label="Close"]) {
+  border-color: var(--tw-accent) !important;
+}
+
+/* Botões de postar/seguir com fundo sólido */
+button[data-testid="tweetButtonInline"],
+button[data-testid="tweetButton"],
+button[data-testid="SideNav_NewTweet_Button"],
+[role="button"][data-testid="tweetButtonInline"],
+[role="button"][data-testid="tweetButton"],
+[role="button"][data-testid="SideNav_NewTweet_Button"] {
+  background-color: var(--tw-accent) !important;
+  border-color: var(--tw-accent) !important;
+  color: var(--tw-accent-contrast) !important;
+}
+
+/* Hover/active para botões */
+button:hover,
+[role="button"]:hover {
+  box-shadow: 0 0 0 999px var(--tw-accent-08a) inset !important; /* leve “tinta” */
+}
+button:active,
+[role="button"]:active {
+  box-shadow: 0 0 0 999px var(--tw-accent-16a) inset !important;
+}
+
+/* ===== Abas e itens selecionados ===== */
+[role="tab"][aria-selected="true"],
+[aria-current="page"],
+[aria-pressed="true"] {
+  color: var(--tw-accent) !important;
+  border-color: var(--tw-accent) !important;
+}
+
+/* ===== Ícones de ações (responder, RT, etc.) ===== */
+/* Muitos ícones usam currentColor; color no contêiner resolve */
+div[role="group"] [role="button"]:hover svg,
+div[role="group"] [role="button"][aria-pressed="true"] svg {
+  color: var(--tw-accent) !important;
+  fill: currentColor !important;
+}
+
+/* ===== Inputs / formulários ===== */
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"],
+progress {
+  accent-color: var(--tw-accent) !important;
+}
+
+/* Caret e seleção de texto (composer e campos editáveis) */
+[contenteditable="true"],
+textarea,
+input[type="text"],
+input[type="search"] {
+  caret-color: var(--tw-accent) !important;
+}
+::selection {
+  background: var(--tw-accent-300);
+  color: #1a1a1a;
+}
+
+/* ===== Foco de acessibilidade ===== */
+:focus-visible {
+  outline: 2px solid var(--tw-accent) !important;
+  outline-offset: 2px !important;
+  border-color: var(--tw-accent) !important;
+}
+
+/* ===== Realces sutis ===== */
+/* chips, filtros, cards “em foco” */
+[role="button"][aria-selected="true"],
+[aria-selected="true"] {
+  background-color: var(--tw-accent-08a) !important;
+}
+
+/* Links secundários/counters active */
+a[role="link"][aria-selected="true"] {
+  color: var(--tw-accent) !important;
+}
+
+/* ===== Badges/contadores ===== */
+[data-testid="app-bar-notifications"] [aria-live] {
+  background-color: var(--tw-accent) !important;
+  color: var(--tw-accent-contrast) !important;
+}
+
+/* ===== Bordas, highlights de navegação ===== */
+header nav a[role="link"][aria-current="page"] {
+  color: var(--tw-accent) !important;
+  border-bottom: 2px solid var(--tw-accent) !important;
+}
+
+/* ===== Evitar afetar imagens/vídeos ===== */
+img, video { filter: none !important; }
+
+/* ===== Pequenas correções ===== */
+/* Não “pintar” o X/fechar modais */
+[aria-label="Close"] svg { color: inherit !important; }
+
+/* Adesão mais leve em temas claros/escuros nativos */
+@media (prefers-color-scheme: dark) {
+  a[role="link"],
+  a[href^="/"] { color: var(--tw-accent-400) !important; }
+}

@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Enhanced Twitter",
+  "version": "1.1",
+  "icons": {
+    "128": "logo/icon128.png",
+    "16": "logo/icon16.png",
+    "48": "logo/icon48.png"
+  },
+  "description": "Multiple enhancements for Twitter, including custom themes, hide annoying buttons and more.",
+  "permissions": [ "scripting", "tabs", "storage" ],
+  "action": {
+    "default_title": "Open Settings"
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*", "https://twitter.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "host_permissions": [ "https://x.com/*" ],
+    "web_accessible_resources": [
+    {
+      "resources": ["themes/*.css"],
+      "matches": ["https://x.com/*", "https://twitter.com/*"]
+    }
+  ]
+}
+
