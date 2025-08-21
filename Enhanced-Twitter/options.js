@@ -18,3 +18,9 @@ const statusEl = document.getElementById('status');
 chrome.storage.local.get({ theme: 'red' }, ({ theme }) => {
   statusEl.textContent = `Tema atual: ${theme}`;
 });
+
+// disable subscribe to premium
+const chkHideUpsell = document.getElementById('hide-upsell');
+chkHideUpsell.addEventListener('change', async () => {
+  await chrome.storage.local.set({ hideUpsell: chkHideUpsell.checked });
+});
