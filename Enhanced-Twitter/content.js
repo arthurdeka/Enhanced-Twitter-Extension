@@ -1,14 +1,10 @@
 (async function main() {
-  // themes ===============================
-
-  // get selected theme and apply
-  const { theme, hideUpsell } = await chrome.storage.local.get({
+  // get saved options from storage (key, defaultValue)
+  const { theme, hideSubscribeToPremiumCard } = await chrome.storage.local.get({
     theme: 'red',
-    hideUpsell: true
+    hideSubscribeToPremiumCard: true
   });
 
-  // run functions
-  await injectTheme(theme);
 
   // listener to apply changes again if tab changes
   chrome.storage.onChanged.addListener(async (changes, areaName) => {
@@ -17,7 +13,10 @@
     }
   });
 
-  // hidable elements =====================
+  // run functions
+  await injectTheme(theme);
+  if (hideSubscribeToPremiumCard) hideElement('[data-testid="super-upsell-UpsellCardRenderProperties"], a[href="/i/premium_sign_up"]');
+
 })();
 
 async function injectTheme(themeName) {

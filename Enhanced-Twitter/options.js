@@ -1,26 +1,38 @@
-// functions ===============================
+// themes ===============================
 
-// set selected theme
+document
+  .getElementById("btn-red")
+  .addEventListener("click", () => setTheme("red"));
+document
+  .getElementById("btn-green")
+  .addEventListener("click", () => setTheme("green"));
+document
+  .getElementById("btn-blue")
+  .addEventListener("click", () => setTheme("blue"));
+
+// shows current theme
+const statusEl = document.getElementById("status");
+
+chrome.storage.local.get({ theme: "red" }, ({ theme }) => {
+  statusEl.textContent = `Tema atual: ${theme}`;
+});
 async function setTheme(theme) {
   await chrome.storage.local.set({ theme });
   statusEl.textContent = `Tema salvo: ${theme}`;
 }
 
-// related to the html ===============================
-
-document.getElementById('btn-red').addEventListener('click', () => setTheme('red'));
-document.getElementById('btn-green').addEventListener('click', () => setTheme('green'));
-document.getElementById('btn-blue').addEventListener('click', () => setTheme('blue'));
-
-// shows current theme
-const statusEl = document.getElementById('status');
-
-chrome.storage.local.get({ theme: 'red' }, ({ theme }) => {
-  statusEl.textContent = `Tema atual: ${theme}`;
-});
-
-// disable subscribe to premium
-const chkHideUpsell = document.getElementById('hide-upsell');
-chkHideUpsell.addEventListener('change', async () => {
-  await chrome.storage.local.set({ hideUpsell: chkHideUpsell.checked });
+// hide "subscribe to premium card" checkbox
+const chkHideSubscribeToPremiumCard = document.getElementById(
+  "hide-subscribe-to-premium-card"
+);
+chrome.storage.local.get(
+  { hideSubscribeToPremiumCard: true },
+  ({ hideSubscribeToPremiumCard }) => {
+    chkHideSubscribeToPremiumCard.checked = hideSubscribeToPremiumCard;
+  }
+);
+chkHideSubscribeToPremiumCard.addEventListener("change", async () => {
+  await chrome.storage.local.set({
+    hideSubscribeToPremiumCard: chkHideSubscribeToPremiumCard.checked,
+  });
 });
