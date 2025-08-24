@@ -36,3 +36,20 @@ chkHideSubscribeToPremiumCard.addEventListener("change", async () => {
     hideSubscribeToPremiumCard: chkHideSubscribeToPremiumCard.checked,
   });
 });
+
+
+// hide "ToS and Privacy Policy links" checkbox
+const chkHideRightSidebarLinks = document.getElementById(
+  "hide-right-sidebar-links"
+);
+chrome.storage.local.get(
+  { hideRightSidebarLinks: true },
+  ({ hideRightSidebarLinks }) => {
+    chkHideRightSidebarLinks.checked = hideRightSidebarLinks;
+  }
+);
+chkHideRightSidebarLinks.addEventListener("change", async () => {
+  await chrome.storage.local.set({
+    hideRightSidebarLinks: chkHideRightSidebarLinks.checked,
+  });
+});

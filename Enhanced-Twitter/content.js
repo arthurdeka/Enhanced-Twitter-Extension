@@ -1,8 +1,9 @@
 (async function main() {
   // get saved options from storage (key, defaultValue)
-  const { theme, hideSubscribeToPremiumCard } = await chrome.storage.local.get({
+  const { theme, hideSubscribeToPremiumCard, hideRightSidebarLinks } = await chrome.storage.local.get({
     theme: 'red',
-    hideSubscribeToPremiumCard: true
+    hideSubscribeToPremiumCard: true,
+    hideRightSidebarLinks: true
   });
 
 
@@ -16,6 +17,7 @@
   // run functions
   await injectTheme(theme);
   if (hideSubscribeToPremiumCard) hideElement('[data-testid="super-upsell-UpsellCardRenderProperties"], a[href="/i/premium_sign_up"]');
+  if (hideRightSidebarLinks) hideElement('div.css-175oi2r.r-1kqtdi0.r-1867qdf.r-1phboty.r-1ifxtd0.r-1udh08x.r-1niwhzg.r-1yadl64');
 
 })();
 
