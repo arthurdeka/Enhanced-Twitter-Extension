@@ -21,23 +21,39 @@ async function setTheme(theme) {
   statusEl.textContent = `Tema salvo: ${theme}`;
 }
 
+/* NAVBAR OPTIONS ============================ */
 
-// hide "subscribe to premium card" checkbox
-const chkHideSubscribeToPremiumCard = document.getElementById(
-  "hide-subscribe-to-premium-card"
-);
-chrome.storage.local.get(
-  { hideSubscribeToPremiumCard: true },
-  ({ hideSubscribeToPremiumCard }) => {
-    chkHideSubscribeToPremiumCard.checked = hideSubscribeToPremiumCard;
-  }
-);
-chkHideSubscribeToPremiumCard.addEventListener("change", async () => {
-  await chrome.storage.local.set({
-    hideSubscribeToPremiumCard: chkHideSubscribeToPremiumCard.checked,
+const checkboxes = [
+  { id: "hide-home-shortcut",          key: "hideHomeShortcut",          def: false },
+  { id: "hide-explore-shortcut",       key: "hideExploreShortcut",       def: false },
+  { id: "hide-notifications-shortcut", key: "hideNotificationsShortcut", def: false },
+  { id: "hide-messages-shortcut",      key: "hideMessagesShortcut",      def: false },
+  { id: "hide-grok-shortcut",          key: "hideGrokShortcut",          def: true  },
+  { id: "hide-bookmarks-shortcut",     key: "hideBookmarksShortcut",     def: false },
+  { id: "hide-jobs-shortcut",          key: "hideJobsShortcut",          def: true  },
+  { id: "hide-communities-shortcut",   key: "hideCommunitiesShortcut",   def: false },
+  { id: "hide-verifiedorgs-shortcut",  key: "hideVerifiedOrgsShortcut",  def: true  },
+  { id: "hide-profile-shortcut",       key: "hideProfileShortcut",       def: false },
+  { id: "hide-more-shortcut",          key: "hideMoreShortcut",          def: false },
+];
+
+checkboxes.forEach(({ id, key, def }) => {
+  const input = document.getElementById(id);
+  if (!input) return console.warn(`${id} não encontrado`);
+
+  // carrega valor
+  chrome.storage.local.get({ [key]: def }, obj => {
+    input.checked = obj[key];
+  });
+
+  // salva valor
+  input.addEventListener("change", () => {
+    chrome.storage.local.set({ [key]: input.checked });
   });
 });
 
+
+/* SIDEBAR ============================ */
 
 // hide "ToS and Privacy Policy links" checkbox
 const chkHideRightSidebarLinks = document.getElementById(
@@ -55,14 +71,18 @@ chkHideRightSidebarLinks.addEventListener("change", async () => {
   });
 });
 
-
-// hide "Grok shortcut" checkbox
-const chkHideGrokShortcut = document.getElementById("hide-grok-shortcut");
-chrome.storage.local.get({ hideGrokShortcut: true }, ({ hideGrokShortcut }) => {
-  chkHideGrokShortcut.checked = hideGrokShortcut;
-});
-chkHideGrokShortcut.addEventListener("change", async () => {
+// hide "subscribe to premium card" checkbox
+const chkHideSubscribeToPremiumCard = document.getElementById(
+  "hide-subscribe-to-premium-card"
+);
+chrome.storage.local.get(
+  { hideSubscribeToPremiumCard: true },
+  ({ hideSubscribeToPremiumCard }) => {
+    chkHideSubscribeToPremiumCard.checked = hideSubscribeToPremiumCard;
+  }
+);
+chkHideSubscribeToPremiumCard.addEventListener("change", async () => {
   await chrome.storage.local.set({
-    hideGrokShortcut: chkHideGrokShortcut.checked,
+    hideSubscribeToPremiumCard: chkHideSubscribeToPremiumCard.checked,
   });
 });
