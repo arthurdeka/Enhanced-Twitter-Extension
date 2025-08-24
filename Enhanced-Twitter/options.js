@@ -21,6 +21,7 @@ async function setTheme(theme) {
   statusEl.textContent = `Tema salvo: ${theme}`;
 }
 
+
 // hide "subscribe to premium card" checkbox
 const chkHideSubscribeToPremiumCard = document.getElementById(
   "hide-subscribe-to-premium-card"
@@ -51,5 +52,17 @@ chrome.storage.local.get(
 chkHideRightSidebarLinks.addEventListener("change", async () => {
   await chrome.storage.local.set({
     hideRightSidebarLinks: chkHideRightSidebarLinks.checked,
+  });
+});
+
+
+// hide "Grok shortcut" checkbox
+const chkHideGrokShortcut = document.getElementById("hide-grok-shortcut");
+chrome.storage.local.get({ hideGrokShortcut: true }, ({ hideGrokShortcut }) => {
+  chkHideGrokShortcut.checked = hideGrokShortcut;
+});
+chkHideGrokShortcut.addEventListener("change", async () => {
+  await chrome.storage.local.set({
+    hideGrokShortcut: chkHideGrokShortcut.checked,
   });
 });
