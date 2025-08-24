@@ -9,7 +9,6 @@
 
   // run functions
   await injectTheme(theme);
-  setUpsellHidden(hideUpsell);
 
   // listener to apply changes again if tab changes
   chrome.storage.onChanged.addListener(async (changes, areaName) => {
@@ -39,67 +38,57 @@ async function injectTheme(themeName) {
   document.documentElement.appendChild(style);
 }
 
-const setUpsellHidden = (() => {
-  let styleEl = null;
-  let observer = null;
-  const SELECTOR =
-    '[data-testid="super-upsell-UpsellCardRenderProperties"], a[href="/i/premium_sign_up"]';
+const hideElement = (() => {
+  // Mapeia cada seletor a { styleEl, observer }
+  const registry = new Map();
 
-  function injectStyle() {
-    if (styleEl) return;
-    styleEl = document.createElement("style");
-    styleEl.id = "upsell-hide-style";
-    styleEl.textContent = `
-      ${SELECTOR} { display: none !important; }
-    `;
-    document.documentElement.appendChild(styleEl);
-  }
-  function removeStyle() {
-    if (styleEl) {
-      styleEl.remove();
-      styleEl = null;
-    }
-  }
-  function removeExisting() {
-    document.querySelectorAll(SELECTOR).forEach((el) => {
-      (el.closest(".css-175oi2r") || el).remove();
-    });
-  }
-  function startObserver() {
-    if (observer) return;
-    observer = new MutationObserver((muts) => {
+  function enable(selector) {
+    if (registry.has(selector)) return; // já ativo
+
+    /* 1. Injeta CSS que força display:none */
+    const styleEl = document.createElement('style');
+    styleEl.textContent = `${selector} { display: none !important; }`;
+    document.head.appendChild(styleEl);
+
+    /* 2. Remove os elementos que já existem na página */
+    document.querySelectorAll(selector).forEach(el => el.remove());
+
+    /* 3. Observa mutações futuras */
+    const observer = new MutationObserver(muts => {
       for (const m of muts) {
         for (const node of m.addedNodes) {
           if (!(node instanceof Element)) continue;
-          const hits = node.querySelectorAll?.(SELECTOR);
-          if (hits && hits.length) {
-            hits.forEach((hit) =>
-              (hit.closest(".css-175oi2r") || hit).remove()
-            );
-          }
+
+          // Se o próprio nó corresponde
+          if (node.matches?.(selector)) node.remove();
+
+          // Ou se contém algo que corresponda
+          node.querySelectorAll?.(selector).forEach(hit => hit.remove());
         }
       }
     });
-    observer.observe(document.body || document.documentElement, {
-      childList: true,
-      subtree: true,
-    });
-  }
-  function stopObserver() {
-    if (observer) {
-      observer.disconnect();
-      observer = null;
-    }
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    registry.set(selector, { styleEl, observer });
   }
 
-  return function setUpsellHidden(shouldHide) {
-    if (shouldHide) {
-      injectStyle();
-      removeExisting();
-      startObserver();
-    } else {
-      stopObserver();
-      removeStyle();
-    }
-  };
+  function disable(selector) {
+    const entry = registry.get(selector);
+    if (!entry) return;
+
+    entry.observer.disconnect();
+    entry.styleEl.remove();
+    registry.delete(selector);
+  }
+
+  // Função que o usuário chama
+  function hideElement(selector) {
+    if (typeof selector !== 'string' || !selector.trim()) return;
+    enable(selector);
+  }
+
+  // API para parar de esconder
+  hideElement.stop = disable;
+
+  return hideElement;
 })();
